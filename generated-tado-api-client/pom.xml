@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>nl.kritsel</groupId>
+        <artifactId>tado-api-demo-java</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>generated-tado-api-client</artifactId>
+    <packaging>jar</packaging>
+
+    <properties>
+        <generated.src.folder>generated-src</generated.src.folder>
+    </properties>
+
+    <build>
+        <sourceDirectory>${generated.src.folder}/main/java</sourceDirectory>
+        <plugins>
+            <plugin>
+                <groupId>org.openapitools</groupId>
+                <artifactId>openapi-generator-maven-plugin</artifactId>
+                <version>7.7.0</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <!-- supported configuration properties documentation:
+                            https://github.com/OpenAPITools/openapi-generator/tree/master/modules/openapi-generator-maven-plugin -->
+                        <configuration>
+                            <!-- the essentials -->
+                            <inputSpec>https://raw.githubusercontent.com/kritsel/tado-openapispec-v2/v2.2024.08.01.3/tado-openapispec-v2.yaml</inputSpec>
+                            <generatorName>java</generatorName>
+                            <library>restclient</library>
+
+                            <!-- when to generate -->
+                            <skipIfSpecIsUnchanged>true</skipIfSpecIsUnchanged>
+
+                            <!-- where to generate to -->
+                            <output>${project.basedir}/</output>
+
+                            <!-- naming preferences -->
+                            <apiNameSuffix>tado</apiNameSuffix>
+
+                            <!--  java generator does not use 'packageName'
+                                  need to define the other package options instead -->
+                            <apiPackage>tadoclient</apiPackage>
+                            <modelPackage>tadoclient</modelPackage>
+                            <invokerPackage>tadoclient</invokerPackage>
+
+                            <!-- prevent generation of files we don't use -->
+                            <generateModelTests>false</generateModelTests>
+                            <generateApiTests>false</generateApiTests>
+                            <generateModelDocumentation>false</generateModelDocumentation>
+                            <generateApiDocumentation>false</generateApiDocumentation>
+
+                            <!-- java generator specific configOptions documentation:
+                                 https://openapi-generator.tech/docs/generators/java -->
+                            <configOptions>
+                                <sourceFolder>${generated.src.folder}/main/java</sourceFolder>
+                            </configOptions>
+
+                            <!-- use java.time.LocalDateTime instead of java.time.OffsetDateTime -->
+                            <typeMappings>
+                                <typeMapping>DateTime=java.time.LocalDateTime</typeMapping>
+                            </typeMappings>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- ensure all generated files get removed when executing mvn clean -->
+            <plugin>
+                <artifactId>maven-clean-plugin</artifactId>
+                <version>3.0.0</version>
+                <configuration>
+                    <filesets>
+                        <fileset>
+                            <!-- make sure to keep the files we maintain ourselves -->
+                            <directory>./</directory>
+                            <excludes>
+                                <exclude>pom.xml</exclude>
+                                <exclude>README.md</exclude>
+                                <exclude>.openapi-generator-ignore</exclude>
+                            </excludes>
+                        </fileset>
+                    </filesets>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.openapitools</groupId>
+            <artifactId>jackson-databind-nullable</artifactId>
+            <version>0.2.6</version>
+        </dependency>
+    </dependencies>
+
+</project>
