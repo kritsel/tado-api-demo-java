@@ -33,7 +33,7 @@
                             https://github.com/OpenAPITools/openapi-generator/tree/master/modules/openapi-generator-maven-plugin -->
                         <configuration>
                             <!-- the essentials -->
-                            <inputSpec>https://raw.githubusercontent.com/kritsel/tado-openapispec-v2/v2.2024.08.01.3/tado-openapispec-v2.yaml</inputSpec>
+                            <inputSpec>https://raw.githubusercontent.com/kritsel/tado-openapispec-v2/v2.2024.08.11.4/tado-openapispec-v2.yaml</inputSpec>
                             <generatorName>java</generatorName>
                             <library>restclient</library>
 
@@ -64,10 +64,21 @@
                                 <sourceFolder>${generated.src.folder}/main/java</sourceFolder>
                             </configOptions>
 
-                            <!-- use java.time.LocalDateTime instead of java.time.OffsetDateTime -->
+                            <!-- https://stackoverflow.com/questions/32437550/whats-the-difference-between-instant-and-localdatetime -->
+                            <!-- configure the Java types to use for string fields with a format specified
+                                 as 'date', 'date-time' or 'time' -->
                             <typeMappings>
-                                <typeMapping>DateTime=java.time.LocalDateTime</typeMapping>
+                                <typeMapping>DateTime=Instant</typeMapping>
+                                <typeMapping>date=LocalDate</typeMapping>
+                                <typeMapping>time=LocalTime</typeMapping>
                             </typeMappings>
+
+                            <!-- configure the imports to use for the Java types defined above -->
+                            <importMappings>
+                                <importMapping>Instant=java.time.Instant</importMapping>
+                                <importMapping>LocalDate=java.time.LocalDate</importMapping>
+                                <importMapping>LocalTime=java.time.LocalTime</importMapping>
+                            </importMappings>
                         </configuration>
                     </execution>
                 </executions>
